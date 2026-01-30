@@ -173,92 +173,98 @@
         </main>
     </div>
 
+    <script src="../js/api.js"></script>
     <script src="../js/admin-cms.js"></script>
     <script src="../js/script.js"></script>
     <script>
         // Load settings on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            const settings = getSiteSettings();
+        window.addEventListener('DOMContentLoaded', async () => {
+            const settings = await getSiteSettings();
+            if (!settings) return;
 
-            document.getElementById('siteName').value = settings.siteName;
-            document.getElementById('tagline').value = settings.tagline;
-            document.getElementById('contactEmail').value = settings.contactEmail;
-            document.getElementById('contactPhone').value = settings.contactPhone;
-            document.getElementById('contactAddress').value = settings.contactAddress;
-            document.getElementById('telegramBotToken').value = settings.telegramBotToken || '';
-            document.getElementById('telegramChatId').value = settings.telegramChatId || '';
+            document.getElementById('siteName').value = settings.site_name || '';
+            document.getElementById('tagline').value = settings.tagline || '';
+            document.getElementById('contactEmail').value = settings.contact_email || '';
+            document.getElementById('contactPhone').value = settings.contact_phone || '';
+            document.getElementById('contactAddress').value = settings.contact_address || '';
+            document.getElementById('telegramBotToken').value = settings.telegram_bot_token || '';
+            document.getElementById('telegramChatId').value = settings.telegram_chat_id || '';
         });
 
         // General settings form
-        document.getElementById('generalSettingsForm').addEventListener('submit', (e) => {
+        document.getElementById('generalSettingsForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const settings = getSiteSettings();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
 
-            settings.siteName = document.getElementById('siteName').value;
+            const settings = await getSiteSettings() || {};
+            settings.site_name = document.getElementById('siteName').value;
             settings.tagline = document.getElementById('tagline').value;
 
-            updateSiteSettings(settings);
-            showNotification('General settings saved successfully!');
+            await updateSiteSettings(settings);
+            btn.disabled = false;
         });
 
         // Contact settings form
-        document.getElementById('contactSettingsForm').addEventListener('submit', (e) => {
+        document.getElementById('contactSettingsForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const settings = getSiteSettings();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
 
-            settings.contactEmail = document.getElementById('contactEmail').value;
-            settings.contactPhone = document.getElementById('contactPhone').value;
-            settings.contactAddress = document.getElementById('contactAddress').value;
+            const settings = await getSiteSettings() || {};
+            settings.contact_email = document.getElementById('contactEmail').value;
+            settings.contact_phone = document.getElementById('contactPhone').value;
+            settings.contact_address = document.getElementById('contactAddress').value;
 
-            updateSiteSettings(settings);
-            showNotification('Contact information saved successfully!');
+            await updateSiteSettings(settings);
+            btn.disabled = false;
         });
 
         // Telegram settings form
-        document.getElementById('telegramSettingsForm').addEventListener('submit', (e) => {
+        document.getElementById('telegramSettingsForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const settings = getSiteSettings();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
 
-            settings.telegramBotToken = document.getElementById('telegramBotToken').value;
-            settings.telegramChatId = document.getElementById('telegramChatId').value;
+            const settings = await getSiteSettings() || {};
+            settings.telegram_bot_token = document.getElementById('telegramBotToken').value;
+            settings.telegram_chat_id = document.getElementById('telegramChatId').value;
 
-            updateSiteSettings(settings);
-            showNotification('Telegram settings saved successfully!');
+            await updateSiteSettings(settings);
+            btn.disabled = false;
         });
 
         // Export all data
-        function exportAllData() {
-            const data = {
-                homePageContent: getHomePageContent(),
-                causesData: getCauses(),
-                galleryImages: JSON.parse(localStorage.getItem('galleryImages')) || [],
-                postsData: getPosts(),
-                donationsLog: getDonations(),
-                siteSettings: getSiteSettings()
-            };
+        async function exportAllData() {
+            try {
+                const data = {
+                    homePageContent: await getHomePageContent(),
+                    causesData: await getCauses(),
+                    galleryImages: await getGalleryImages(),
+                    postsData: await getPosts(),
+                    donationsLog: await getDonations(),
+                    siteSettings: await getSiteSettings(),
+                    backup_date: new Date().toISOString()
+                };
 
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `hope-foundation-backup-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            window.URL.revokeObjectURL(url);
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `hope-foundation-db-export-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                window.URL.revokeObjectURL(url);
 
-            showNotification('Data exported successfully!');
+                showNotification('Data exported successfully!');
+            } catch (err) {
+                console.error(err);
+                showNotification('Export failed', 'error');
+            }
         }
 
-        // Clear all data
+        // Clear all data (Not implemented for DB safety, just show message or implement if needed)
         function clearAllData() {
-            if (confirm('⚠️ WARNING: This will delete ALL website data including causes, gallery, posts, and donations. This action CANNOT be undone. Are you absolutely sure?')) {
-                if (confirm('This is your last chance. Click OK to permanently delete all data.')) {
-                    localStorage.clear();
-                    showNotification('All data has been cleared!', 'error');
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                }
-            }
+            showNotification('Database clear is disabled for safety. Please use DB tools.', 'error');
         }
     </script>
 </body>

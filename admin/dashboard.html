@@ -197,23 +197,25 @@
         </main>
     </div>
 
+    <script src="../js/api.js"></script>
     <script src="../js/admin-cms.js"></script>
     <script src="../js/script.js"></script>
     <script>
-        // Update dashboard stats
-        window.addEventListener('DOMContentLoaded', () => {
-            const galleryImages = JSON.parse(localStorage.getItem('galleryImages')) || [];
-            const donations = JSON.parse(localStorage.getItem('donationsLog')) || [];
-            const posts = JSON.parse(localStorage.getItem('postsData')) || [];
-            const causes = JSON.parse(localStorage.getItem('causesData')) || [];
+        // Update dashboard stats from API
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const stats = await api.getDonationStats();
+                const causesData = await api.getAdminCauses();
+                const galleryData = await api.getGallery();
+                const postsData = await api.getPosts();
 
-            document.getElementById('causesCount').textContent = causes.length;
-            document.getElementById('galleryCount').textContent = galleryImages.length;
-            document.getElementById('donationCount').textContent = donations.length;
-            document.getElementById('messageCount').textContent = posts.length;
-
-            // Update causes count in a new stat card if needed
-            console.log(`Dashboard loaded: ${causes.length} causes, ${galleryImages.length} images, ${donations.length} donations, ${posts.length} posts`);
+                document.getElementById('causesCount').textContent = causesData.success ? causesData.data.length : 0;
+                document.getElementById('galleryCount').textContent = galleryData.success ? galleryData.data.length : 0;
+                document.getElementById('donationCount').textContent = stats.success ? stats.data.total.count : 0;
+                document.getElementById('messageCount').textContent = postsData.success ? postsData.data.length : 0;
+            } catch (err) {
+                console.error('Error loading dashboard stats:', err);
+            }
         });
     </script>
 </body>

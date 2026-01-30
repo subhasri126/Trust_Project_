@@ -121,33 +121,92 @@
         </main>
     </div>
 
+    <script src="../js/api.js"></script>
+    <script src="../js/admin-cms.js"></script>
     <script src="../js/script.js"></script>
     <script>
-        // Update image count
-        function updateImageCount() {
-            const galleryImages = JSON.parse(localStorage.getItem('galleryImages')) || [];
+        // Load and display gallery
+        async function loadAdminGallery() {
+            const images = await getGalleryImages();
+            const adminGallery = document.getElementById('adminGalleryGrid');
             const countText = document.getElementById('imageCountText');
-            const placeholder = document.querySelector('.no-images-placeholder');
 
-            if (countText) {
-                countText.textContent = `${galleryImages.length} image${galleryImages.length !== 1 ? 's' : ''} in gallery`;
+            if (!adminGallery) return;
+
+            if (images.length === 0) {
+                adminGallery.innerHTML = `
+                    <div class="no-images-placeholder">
+                        <i class="fas fa-images"></i>
+                        <p>No images uploaded yet</p>
+                        <span>Upload your first image using the form above</span>
+                    </div>
+                `;
+                countText.textContent = '0 images in gallery';
+                return;
             }
 
-            if (placeholder) {
-                placeholder.style.display = galleryImages.length > 0 ? 'none' : 'flex';
+            countText.textContent = `${images.length} image${images.length !== 1 ? 's' : ''} in gallery`;
+
+            adminGallery.innerHTML = images.map(img => `
+                <div class="admin-gallery-item">
+                    <img src="${img.image}" alt="${img.caption || ''}">
+                    <div class="admin-gallery-overlay">
+                        <button onclick="deleteGalleryImg(${img.id})" class="delete-btn">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                    <p class="image-title">${img.caption || 'Untitled'}</p>
+                </div>
+            `).join('');
+        }
+
+        // Handle upload
+        document.getElementById('uploadImageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+
+            const fileInput = document.getElementById('imageFile');
+            const captionInput = document.getElementById('imageTitle');
+
+            if (fileInput.files.length === 0) {
+                alert('Please select an image file');
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            btn.disabled = true;
+
+            try {
+                const res = await api.addGalleryImage(fileInput.files[0], captionInput.value);
+                if (res.success) {
+                    showNotification('Image uploaded successfully');
+                    fileInput.value = '';
+                    captionInput.value = '';
+                    await loadAdminGallery();
+                } else {
+                    alert('Upload failed: ' + res.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('An error occurred during upload');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        // Handle delete
+        async function deleteGalleryImg(id) {
+            if (confirm('Are you sure you want to delete this image?')) {
+                const success = await deleteGalleryImage(id);
+                if (success) {
+                    await loadAdminGallery();
+                }
             }
         }
 
-        window.addEventListener('DOMContentLoaded', updateImageCount);
-
-        // Override loadGallery to also update count
-        const originalLoadGallery = window.loadGallery;
-        if (originalLoadGallery) {
-            window.loadGallery = function () {
-                originalLoadGallery();
-                updateImageCount();
-            };
-        }
+        window.addEventListener('DOMContentLoaded', loadAdminGallery);
     </script>
 </body>
 

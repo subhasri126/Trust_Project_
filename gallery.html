@@ -120,18 +120,9 @@
         </div>
     </footer>
 
+    <script src="js/api.js"></script>
+    <script src="js/dynamic-content.js"></script>
     <script src="js/script.js"></script>
-    <script>
-        // Hide placeholder message if images exist
-        window.addEventListener('DOMContentLoaded', () => {
-            const galleryImages = JSON.parse(localStorage.getItem('galleryImages')) || [];
-            const noImagesMsg = document.querySelector('.no-images-message');
-
-            if (galleryImages.length > 0 && noImagesMsg) {
-                noImagesMsg.style.display = 'none';
-            }
-        });
-    </script>
 </body>
 
 </html>

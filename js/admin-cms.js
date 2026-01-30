@@ -1,222 +1,165 @@
 // ==========================================
-// ADMIN CMS - DATA MANAGEMENT SYSTEM
+// ADMIN CMS - DATA MANAGEMENT SYSTEM (API INTEGRATED)
 // ==========================================
 
-// Initialize default data structure
-function initializeDefaultData() {
-    // Home Page Content
-    if (!localStorage.getItem('homePageContent')) {
-        const defaultHomeContent = {
-            heroTitle: 'Transforming Lives, One Step at a Time',
-            heroTagline: 'Together, we can bring hope, education, and nourishment to those who need it most',
-            heroImage: 'images/hero-image.jpg',
-            stats: {
-                livesImpacted: 15000,
-                eventsOrganized: 250,
-                activeVolunteers: 500,
-                communitiesServed: 45
-            },
-            introTitle: 'Building a Better Tomorrow',
-            introText: 'Hope Foundation is a non-profit organization dedicated to empowering underprivileged communities through education, nutrition, and healthcare. Since our inception, we\'ve been committed to creating lasting change and breaking the cycle of poverty.'
-        };
-        localStorage.setItem('homePageContent', JSON.stringify(defaultHomeContent));
-    }
-
-    // Causes Data
-    if (!localStorage.getItem('causesData')) {
-        const defaultCauses = [
-            {
-                id: 1,
-                title: 'Education for All',
-                icon: 'fas fa-graduation-cap',
-                shortDescription: 'Providing quality education, books, and learning materials to underprivileged children, ensuring they have the tools to build a brighter future.',
-                fullDescription: 'Education is the foundation of a better future. We believe every child deserves access to quality education, regardless of their economic background.',
-                image: 'images/education-cause.jpg',
-                features: [
-                    'Free tutoring and mentorship programs',
-                    'Books, stationery, and learning materials',
-                    'Scholarship opportunities for deserving students',
-                    'Digital literacy and computer training',
-                    'Career guidance and skill development'
-                ],
-                active: true
-            },
-            {
-                id: 2,
-                title: 'Food Security',
-                icon: 'fas fa-utensils',
-                shortDescription: 'Fighting hunger by distributing nutritious meals and essential food supplies to families struggling to make ends meet.',
-                fullDescription: 'No one should go to bed hungry. Our food security programs ensure that families have access to nutritious meals and essential food supplies.',
-                image: 'images/food-cause.jpg',
-                features: [
-                    'Daily meal distribution programs',
-                    'Monthly food ration kits for families',
-                    'Community kitchens serving hot meals',
-                    'Nutrition education and awareness',
-                    'Emergency food relief during crises'
-                ],
-                active: true
-            },
-            {
-                id: 3,
-                title: 'Healthcare Access',
-                icon: 'fas fa-heartbeat',
-                shortDescription: 'Organizing medical camps and providing essential healthcare services to communities with limited access to medical facilities.',
-                fullDescription: 'Quality healthcare is a fundamental right. We organize medical camps and provide essential healthcare services to communities with limited access to medical facilities.',
-                image: 'images/healthcare-cause.jpg',
-                features: [
-                    'Free medical camps and health checkups',
-                    'Medicine distribution programs',
-                    'Vaccination drives for children',
-                    'Health awareness and hygiene education',
-                    'Emergency medical assistance'
-                ],
-                active: true
-            }
-        ];
-        localStorage.setItem('causesData', JSON.stringify(defaultCauses));
-    }
-
-    // Site Settings
-    if (!localStorage.getItem('siteSettings')) {
-        const defaultSettings = {
-            siteName: 'Hope Foundation',
-            tagline: 'Transforming Lives Together',
-            telegramBotToken: '',
-            telegramChatId: '',
-            contactEmail: 'info@hopefoundation.org',
-            contactPhone: '+1 (555) 123-4567',
-            contactAddress: '123 Hope Street, City, State'
-        };
-        localStorage.setItem('siteSettings', JSON.stringify(defaultSettings));
-    }
-
-    // Posts/Updates
-    if (!localStorage.getItem('postsData')) {
-        localStorage.setItem('postsData', JSON.stringify([]));
-    }
-
-    // Donations Log
-    if (!localStorage.getItem('donationsLog')) {
-        localStorage.setItem('donationsLog', JSON.stringify([]));
-    }
-}
-
-// Initialize on load
-initializeDefaultData();
+// Global state for admin (optional)
+let currentAdmin = JSON.parse(localStorage.getItem('adminUser'));
 
 // ==========================================
 // HOME PAGE MANAGEMENT
 // ==========================================
 
-function getHomePageContent() {
-    return JSON.parse(localStorage.getItem('homePageContent'));
+async function getHomePageContent() {
+    const response = await api.getHomeContent();
+    return response.success ? response.data : null;
 }
 
-function updateHomePageContent(content) {
-    localStorage.setItem('homePageContent', JSON.stringify(content));
+async function updateHomePageContent(content) {
+    const response = await api.updateHomePageContent(content);
+    if (response.success) {
+        showNotification('Home page updated successfully');
+    } else {
+        showNotification(response.message || 'Failed to update home page', 'error');
+    }
+    return response;
 }
 
 // ==========================================
 // CAUSES MANAGEMENT
 // ==========================================
 
-function getCauses() {
-    return JSON.parse(localStorage.getItem('causesData'));
+async function getCauses() {
+    const response = await api.getAdminCauses();
+    return response.success ? response.data : [];
 }
 
-function saveCauses(causes) {
-    localStorage.setItem('causesData', JSON.stringify(causes));
-}
-
-function addCause(cause) {
-    const causes = getCauses();
-    cause.id = Date.now();
-    cause.active = true;
-    causes.push(cause);
-    saveCauses(causes);
-    return cause;
-}
-
-function updateCause(causeId, updatedData) {
-    const causes = getCauses();
-    const index = causes.findIndex(c => c.id === causeId);
-    if (index !== -1) {
-        causes[index] = { ...causes[index], ...updatedData };
-        saveCauses(causes);
-        return causes[index];
+async function addCause(cause) {
+    const response = await api.addCause(cause);
+    if (response.success) {
+        showNotification('Cause added successfully');
+    } else {
+        showNotification(response.message || 'Failed to add cause', 'error');
     }
-    return null;
+    return response.data;
 }
 
-function deleteCause(causeId) {
-    let causes = getCauses();
-    causes = causes.filter(c => c.id !== causeId);
-    saveCauses(causes);
-}
-
-function toggleCauseStatus(causeId) {
-    const causes = getCauses();
-    const cause = causes.find(c => c.id === causeId);
-    if (cause) {
-        cause.active = !cause.active;
-        saveCauses(causes);
+async function updateCause(causeId, updatedData) {
+    const response = await api.updateCause(causeId, updatedData);
+    if (response.success) {
+        showNotification('Cause updated successfully');
+    } else {
+        showNotification(response.message || 'Failed to update cause', 'error');
     }
+    return response.data;
+}
+
+async function deleteCause(causeId) {
+    const response = await api.deleteCause(causeId);
+    if (response.success) {
+        showNotification('Cause deleted successfully');
+    } else {
+        showNotification(response.message || 'Failed to delete cause', 'error');
+    }
+    return response.success;
+}
+
+async function toggleCauseStatus(causeId) {
+    const response = await api.toggleCause(causeId);
+    if (response.success) {
+        showNotification('Status updated');
+    }
+    return response.success;
 }
 
 // ==========================================
 // POSTS/UPDATES MANAGEMENT
 // ==========================================
 
-function getPosts() {
-    return JSON.parse(localStorage.getItem('postsData'));
+async function getPosts() {
+    const response = await api.getPosts();
+    return response.success ? response.data : [];
 }
 
-function savePosts(posts) {
-    localStorage.setItem('postsData', JSON.stringify(posts));
+async function addPost(post) {
+    const response = await api.addPost(post);
+    if (response.success) {
+        showNotification('Post created successfully');
+    }
+    return response.data;
 }
 
-function addPost(post) {
-    const posts = getPosts();
-    post.id = Date.now();
-    post.date = new Date().toISOString();
-    posts.unshift(post);
-    savePosts(posts);
-    return post;
-}
-
-function deletePost(postId) {
-    let posts = getPosts();
-    posts = posts.filter(p => p.id !== postId);
-    savePosts(posts);
+async function deletePost(postId) {
+    const response = await api.deletePost(postId);
+    if (response.success) {
+        showNotification('Post deleted successfully');
+    }
+    return response.success;
 }
 
 // ==========================================
 // DONATIONS MANAGEMENT
 // ==========================================
 
-function getDonations() {
-    return JSON.parse(localStorage.getItem('donationsLog'));
+async function getDonations(status = '') {
+    const response = await api.getDonations(status);
+    return response.success ? response.data.donations : [];
 }
 
-function addDonation(donation) {
-    const donations = getDonations();
-    donation.id = Date.now();
-    donation.timestamp = new Date().toISOString();
-    donations.unshift(donation);
-    localStorage.setItem('donationsLog', JSON.stringify(donations));
+async function getDonationStats() {
+    const response = await api.getDonationStats();
+    return response.success ? response.data : null;
+}
+
+async function updateDonationStatus(id, status) {
+    const response = await api.updateDonationStatus(id, status);
+    if (response.success) {
+        showNotification('Donation status updated');
+    }
+    return response.success;
+}
+
+// ==========================================
+// GALLERY MANAGEMENT
+// ==========================================
+
+async function getGalleryImages() {
+    const response = await api.getGallery();
+    return response.success ? response.data : [];
+}
+
+async function addGalleryImage(image, caption) {
+    const response = await api.addGalleryImage(image, caption);
+    if (response.success) {
+        showNotification('Image added to gallery');
+    }
+    return response.success;
+}
+
+async function deleteGalleryImage(id) {
+    const response = await api.deleteGalleryImage(id);
+    if (response.success) {
+        showNotification('Image deleted');
+    }
+    return response.success;
 }
 
 // ==========================================
 // SITE SETTINGS
 // ==========================================
 
-function getSiteSettings() {
-    return JSON.parse(localStorage.getItem('siteSettings'));
+async function getSiteSettings() {
+    const response = await api.getSettings();
+    return response.success ? response.data : null;
 }
 
-function updateSiteSettings(settings) {
-    localStorage.setItem('siteSettings', JSON.stringify(settings));
+async function updateSiteSettings(settings) {
+    const response = await api.updateSettings(settings);
+    if (response.success) {
+        showNotification('Settings updated successfully');
+    } else {
+        showNotification(response.message || 'Failed to update settings', 'error');
+    }
+    return response;
 }
 
 // ==========================================
@@ -224,6 +167,7 @@ function updateSiteSettings(settings) {
 // ==========================================
 
 function formatDate(isoString) {
+    if (!isoString) return 'N/A';
     const date = new Date(isoString);
     return date.toLocaleDateString('en-US', {
         year: 'numeric',
@@ -253,25 +197,10 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-// Export functions for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        getHomePageContent,
-        updateHomePageContent,
-        getCauses,
-        saveCauses,
-        addCause,
-        updateCause,
-        deleteCause,
-        toggleCauseStatus,
-        getPosts,
-        addPost,
-        deletePost,
-        getDonations,
-        addDonation,
-        getSiteSettings,
-        updateSiteSettings,
-        formatDate,
-        showNotification
-    };
+// Check auth on load for admin pages
+if (window.location.pathname.includes('/admin/') && !window.location.pathname.includes('login.html')) {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+        window.location.href = 'login.html';
+    }
 }

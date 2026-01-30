@@ -1,0 +1,82 @@
+    <script src="../js/api.js"></script>
+    <script src="../js/admin-cms.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        // Load current home page content
+        window.addEventListener('DOMContentLoaded', async () => {
+            const content = await getHomePageContent();
+            if (!content) return;
+
+            // Populate hero section
+            document.getElementById('heroTitle').value = content.hero_title || '';
+            document.getElementById('heroTagline').value = content.hero_tagline || '';
+            document.getElementById('heroImage').value = content.hero_image || '';
+
+            // Populate statistics
+            document.getElementById('livesImpacted').value = content.people_helped || 0;
+            document.getElementById('eventsOrganized').value = content.events_done || 0;
+            document.getElementById('activeVolunteers').value = content.volunteers || 0;
+            document.getElementById('communitiesServed').value = content.communities_served || 0;
+
+            // Populate introduction
+            document.getElementById('introTitle').value = content.intro_title || '';
+            document.getElementById('introText').value = content.intro_text || '';
+        });
+
+        // Hero form submission
+        document.getElementById('heroForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+
+            const content = await getHomePageContent() || {};
+            
+            const fileInput = document.getElementById('heroImageFile');
+            if (fileInput.files.length > 0) {
+                const uploadRes = await api.uploadImage(fileInput.files[0]);
+                if (uploadRes.success) {
+                    content.hero_image = uploadRes.data.url;
+                }
+            } else {
+                content.hero_image = document.getElementById('heroImage').value;
+            }
+
+            content.hero_title = document.getElementById('heroTitle').value;
+            content.hero_tagline = document.getElementById('heroTagline').value;
+            
+            await updateHomePageContent(content);
+            btn.disabled = false;
+        });
+
+        // Statistics form submission
+        document.getElementById('statsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+
+            const content = await getHomePageContent() || {};
+
+            content.people_helped = parseInt(document.getElementById('livesImpacted').value);
+            content.events_done = parseInt(document.getElementById('eventsOrganized').value);
+            content.volunteers = parseInt(document.getElementById('activeVolunteers').value);
+            content.communities_served = parseInt(document.getElementById('communitiesServed').value);
+
+            await updateHomePageContent(content);
+            btn.disabled = false;
+        });
+
+        // Introduction form submission
+        document.getElementById('introForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+
+            const content = await getHomePageContent() || {};
+
+            content.intro_title = document.getElementById('introTitle').value;
+            content.intro_text = document.getElementById('introText').value;
+
+            await updateHomePageContent(content);
+            btn.disabled = false;
+        });
+    </script>

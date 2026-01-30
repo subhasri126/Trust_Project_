@@ -122,58 +122,64 @@
         </main>
     </div>
 
+    <script src="../js/api.js"></script>
     <script src="../js/admin-cms.js"></script>
     <script src="../js/script.js"></script>
     <script>
         // Load donations
-        function loadDonations() {
-            const donations = getDonations();
-            const donationsList = document.getElementById('donationsList');
+        async function loadDonations() {
+            try {
+                const donations = await getDonations();
+                const statsRes = await api.getDonationStats();
+                const donationsList = document.getElementById('donationsList');
 
-            // Update statistics
-            document.getElementById('totalDonations').textContent = donations.length;
+                // Update statistics from API stats
+                if (statsRes.success) {
+                    const stats = statsRes.data;
+                    document.getElementById('totalDonations').textContent = stats.total.count;
+                    document.getElementById('totalAmount').textContent = '₹' + parseFloat(stats.total.amount || 0).toLocaleString();
+                    document.getElementById('todayDonations').textContent = stats.today.count;
+                }
 
-            const totalAmount = donations.reduce((sum, d) => sum + parseFloat(d.amount || 0), 0);
-            document.getElementById('totalAmount').textContent = '₹' + totalAmount.toLocaleString();
+                // Display donations
+                if (!donations || donations.length === 0) {
+                    donationsList.innerHTML = '<p class="empty-state">No donations received yet.</p>';
+                    return;
+                }
 
-            const today = new Date().toDateString();
-            const todayCount = donations.filter(d => new Date(d.timestamp).toDateString() === today).length;
-            document.getElementById('todayDonations').textContent = todayCount;
-
-            // Display donations
-            if (donations.length === 0) {
-                donationsList.innerHTML = '<p class="empty-state">No donations received yet.</p>';
-                return;
-            }
-
-            donationsList.innerHTML = donations.map(donation => `
-                <div class="donation-item">
-                    <div class="donation-header">
-                        <div class="donation-info">
-                            <h3>${donation.name}</h3>
-                            <div class="donation-meta">
-                                <span class="donation-amount">₹${parseFloat(donation.amount).toLocaleString()}</span>
-                                <span class="donation-date"><i class="fas fa-clock"></i> ${formatDate(donation.timestamp)}</span>
+                donationsList.innerHTML = donations.map(donation => `
+                    <div class="donation-item">
+                        <div class="donation-header">
+                            <div class="donation-info">
+                                <h3>${donation.donor_name}</h3>
+                                <div class="donation-meta">
+                                    <span class="donation-amount">₹${parseFloat(donation.amount).toLocaleString()}</span>
+                                    <span class="donation-date"><i class="fas fa-clock"></i> ${formatDate(donation.created_at)}</span>
+                                    <span class="donation-status status-${donation.status}">${donation.status}</span>
+                                </div>
                             </div>
                         </div>
+                        ${donation.message ? `<p class="donation-message"><i class="fas fa-quote-left"></i> ${donation.message}</p>` : ''}
                     </div>
-                    ${donation.message ? `<p class="donation-message"><i class="fas fa-quote-left"></i> ${donation.message}</p>` : ''}
-                </div>
-            `).join('');
+                `).join('');
+            } catch (err) {
+                console.error(err);
+                showNotification('Error loading donations', 'error');
+            }
         }
 
         // Export donations to CSV
-        function exportDonations() {
-            const donations = getDonations();
+        async function exportDonations() {
+            const donations = await getDonations();
 
-            if (donations.length === 0) {
+            if (!donations || donations.length === 0) {
                 alert('No donations to export');
                 return;
             }
 
-            let csv = 'Name,Amount,Message,Date\n';
+            let csv = 'Name,Amount,Message,Date,Status\n';
             donations.forEach(d => {
-                csv += `"${d.name}","${d.amount}","${d.message || ''}","${formatDate(d.timestamp)}"\n`;
+                csv += `"${d.donor_name}","${d.amount}","${d.message || ''}","${formatDate(d.created_at)}","${d.status}"\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv' });

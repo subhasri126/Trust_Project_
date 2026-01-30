@@ -184,80 +184,114 @@
         </main>
     </div>
 
+    <script src="../js/api.js"></script>
     <script src="../js/admin-cms.js"></script>
     <script src="../js/script.js"></script>
     <script>
         // Load current home page content
-        window.addEventListener('DOMContentLoaded', () => {
-            const content = getHomePageContent();
+        window.addEventListener('DOMContentLoaded', async () => {
+            const content = await getHomePageContent();
+            if (!content) return;
 
             // Populate hero section
-            document.getElementById('heroTitle').value = content.heroTitle;
-            document.getElementById('heroTagline').value = content.heroTagline;
-            document.getElementById('heroImage').value = content.heroImage;
+            document.getElementById('heroTitle').value = content.hero_title || '';
+            document.getElementById('heroTagline').value = content.hero_tagline || '';
+            document.getElementById('heroImage').value = content.hero_image || '';
 
             // Populate statistics
-            document.getElementById('livesImpacted').value = content.stats.livesImpacted;
-            document.getElementById('eventsOrganized').value = content.stats.eventsOrganized;
-            document.getElementById('activeVolunteers').value = content.stats.activeVolunteers;
-            document.getElementById('communitiesServed').value = content.stats.communitiesServed;
+            document.getElementById('livesImpacted').value = content.people_helped || 0;
+            document.getElementById('eventsOrganized').value = content.events_done || 0;
+            document.getElementById('activeVolunteers').value = content.volunteers || 0;
+            document.getElementById('communitiesServed').value = content.communities_served || 0;
 
             // Populate introduction
-            document.getElementById('introTitle').value = content.introTitle;
-            document.getElementById('introText').value = content.introText;
+            document.getElementById('introTitle').value = content.intro_title || '';
+            document.getElementById('introText').value = content.intro_text || '';
         });
 
         // Hero form submission
-        document.getElementById('heroForm').addEventListener('submit', (e) => {
+        document.getElementById('heroForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const content = getHomePageContent();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
 
-            const fileInput = document.getElementById('heroImageFile');
-            if (fileInput.files.length > 0) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    content.heroImage = e.target.result;
-                    saveHeroContent(content);
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                saveHeroContent(content);
+            try {
+                const content = await getHomePageContent() || {};
+
+                const fileInput = document.getElementById('heroImageFile');
+                if (fileInput.files.length > 0) {
+                    const uploadRes = await api.uploadImage(fileInput.files[0]);
+                    if (uploadRes.success) {
+                        content.hero_image = uploadRes.data.url;
+                        document.getElementById('heroImage').value = uploadRes.data.url;
+                    }
+                } else {
+                    content.hero_image = document.getElementById('heroImage').value;
+                }
+
+                content.hero_title = document.getElementById('heroTitle').value;
+                content.hero_tagline = document.getElementById('heroTagline').value;
+
+                await updateHomePageContent(content);
+            } catch (err) {
+                console.error(err);
+                showNotification('Error saving hero content', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         });
 
-        function saveHeroContent(content) {
-            content.heroTitle = document.getElementById('heroTitle').value;
-            content.heroTagline = document.getElementById('heroTagline').value;
-            content.heroImage = document.getElementById('heroImage').value;
-
-            updateHomePageContent(content);
-            showNotification('Hero section updated successfully!');
-        }
-
         // Statistics form submission
-        document.getElementById('statsForm').addEventListener('submit', (e) => {
+        document.getElementById('statsForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const content = getHomePageContent();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
 
-            content.stats.livesImpacted = parseInt(document.getElementById('livesImpacted').value);
-            content.stats.eventsOrganized = parseInt(document.getElementById('eventsOrganized').value);
-            content.stats.activeVolunteers = parseInt(document.getElementById('activeVolunteers').value);
-            content.stats.communitiesServed = parseInt(document.getElementById('communitiesServed').value);
+            try {
+                const content = await getHomePageContent() || {};
 
-            updateHomePageContent(content);
-            showNotification('Statistics updated successfully!');
+                content.people_helped = parseInt(document.getElementById('livesImpacted').value);
+                content.events_done = parseInt(document.getElementById('eventsOrganized').value);
+                content.volunteers = parseInt(document.getElementById('activeVolunteers').value);
+                content.communities_served = parseInt(document.getElementById('communitiesServed').value);
+
+                await updateHomePageContent(content);
+            } catch (err) {
+                console.error(err);
+                showNotification('Error saving statistics', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         });
 
         // Introduction form submission
-        document.getElementById('introForm').addEventListener('submit', (e) => {
+        document.getElementById('introForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const content = getHomePageContent();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
 
-            content.introTitle = document.getElementById('introTitle').value;
-            content.introText = document.getElementById('introText').value;
+            try {
+                const content = await getHomePageContent() || {};
 
-            updateHomePageContent(content);
-            showNotification('Introduction section updated successfully!');
+                content.intro_title = document.getElementById('introTitle').value;
+                content.intro_text = document.getElementById('introText').value;
+
+                await updateHomePageContent(content);
+            } catch (err) {
+                console.error(err);
+                showNotification('Error saving introduction', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         });
     </script>
 </body>

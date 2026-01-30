@@ -127,62 +127,88 @@
         </main>
     </div>
 
+    <script src="../js/api.js"></script>
     <script src="../js/admin-cms.js"></script>
     <script src="../js/script.js"></script>
     <script>
         // Load posts
-        function loadPosts() {
-            const posts = getPosts();
-            const postsList = document.getElementById('postsList');
+        async function loadPosts() {
+            try {
+                const posts = await getPosts();
+                const postsList = document.getElementById('postsList');
 
-            if (posts.length === 0) {
-                postsList.innerHTML = '<p class="empty-state">No posts yet. Create your first post above!</p>';
-                return;
-            }
+                if (!posts || posts.length === 0) {
+                    postsList.innerHTML = '<p class="empty-state">No posts yet. Create your first post above!</p>';
+                    return;
+                }
 
-            postsList.innerHTML = posts.map(post => `
-                <div class="post-item">
-                    <div class="post-header">
-                        <div class="post-info">
-                            <h3>${post.title}</h3>
-                            <div class="post-meta">
-                                <span class="post-type ${post.type}">${post.type.replace('-', ' ')}</span>
-                                <span class="post-date"><i class="fas fa-clock"></i> ${formatDate(post.date)}</span>
+                postsList.innerHTML = posts.map(post => `
+                    <div class="post-item">
+                        <div class="post-header">
+                            <div class="post-info">
+                                <h3>${post.title}</h3>
+                                <div class="post-meta">
+                                    <span class="post-type ${post.type}">${post.type ? post.type.replace('-', ' ') : 'Update'}</span>
+                                    <span class="post-date"><i class="fas fa-clock"></i> ${formatDate(post.created_at)}</span>
+                                    <span class="post-author"><i class="fas fa-user"></i> ${post.author_name || 'Admin'}</span>
+                                </div>
                             </div>
+                            <button onclick="removePost(${post.id})" class="btn-icon btn-danger" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
-                        <button onclick="removePost(${post.id})" class="btn-icon btn-danger" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <p class="post-content">${post.content}</p>
+                        ${post.image ? `<img src="${post.image}" alt="${post.title}" class="post-image">` : ''}
                     </div>
-                    <p class="post-content">${post.content}</p>
-                    ${post.image ? `<img src="${post.image}" alt="${post.title}" class="post-image">` : ''}
-                </div>
-            `).join('');
+                `).join('');
+            } catch (err) {
+                console.error(err);
+                showNotification('Error loading posts', 'error');
+            }
         }
 
         // Form submission
-        document.getElementById('postForm').addEventListener('submit', (e) => {
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
+            btn.disabled = true;
 
-            const postData = {
-                title: document.getElementById('postTitle').value,
-                content: document.getElementById('postContent').value,
-                type: document.getElementById('postType').value,
-                image: document.getElementById('postImage').value
-            };
+            try {
+                const postData = {
+                    title: document.getElementById('postTitle').value,
+                    content: document.getElementById('postContent').value,
+                    type: document.getElementById('postType').value,
+                };
 
-            addPost(postData);
-            showNotification('Post published successfully!');
-            document.getElementById('postForm').reset();
-            loadPosts();
+                const fileInput = document.getElementById('postImageFile');
+                if (fileInput && fileInput.files.length > 0) {
+                    const uploadRes = await api.uploadImage(fileInput.files[0]);
+                    if (uploadRes.success) {
+                        postData.image = uploadRes.data.url;
+                    }
+                } else {
+                    postData.image = document.getElementById('postImage').value;
+                }
+
+                await addPost(postData);
+                document.getElementById('postForm').reset();
+                await loadPosts();
+            } catch (err) {
+                console.error(err);
+                showNotification('Error publishing post', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         });
 
         // Remove post
-        function removePost(postId) {
+        async function removePost(postId) {
             if (confirm('Are you sure you want to delete this post?')) {
-                deletePost(postId);
-                loadPosts();
-                showNotification('Post deleted successfully!');
+                await deletePost(postId);
+                await loadPosts();
             }
         }
 

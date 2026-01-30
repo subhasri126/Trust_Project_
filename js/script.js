@@ -158,64 +158,30 @@ if (donationForm) {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         submitBtn.disabled = true;
 
+        const donorName = document.getElementById('donorName').value;
         const formData = {
-            name: document.getElementById('donorName').value,
+            donor_name: donorName,
             amount: document.getElementById('donationAmount').value,
+            email: document.getElementById('donorEmail')?.value || null,
+            phone: document.getElementById('donorPhone')?.value || null,
             message: document.getElementById('donationMessage').value,
-            timestamp: new Date().toLocaleString()
+            payment_method: 'Manual'
         };
-
-        // Save to localStorage for admin viewing
-        const donations = JSON.parse(localStorage.getItem('donationsLog')) || [];
-        const donation = {
-            id: Date.now(),
-            ...formData,
-            timestamp: new Date().toISOString()
-        };
-        donations.unshift(donation);
-        localStorage.setItem('donationsLog', JSON.stringify(donations));
 
         try {
-            // Get Telegram settings from admin
-            const settings = JSON.parse(localStorage.getItem('siteSettings')) || {};
-            const telegramBotToken = settings.telegramBotToken;
-            const telegramChatId = settings.telegramChatId;
+            // Use Backend API
+            const response = await api.submitDonation(formData);
 
-            // Send to Telegram if configured
-            if (telegramBotToken && telegramChatId) {
-                const telegramMessage = `
-🎁 New Donation Received!
-
-👤 Name: ${formData.name}
-💰 Amount: ₹${formData.amount}
-💬 Message: ${formData.message}
-📅 Time: ${formData.timestamp}
-                `;
-
-                const telegramUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
-
-                await fetch(telegramUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: telegramChatId,
-                        text: telegramMessage,
-                        parse_mode: 'HTML'
-                    })
-                });
+            if (response.success) {
+                showThankYouMessage(donorName);
+                donationForm.reset();
+            } else {
+                alert('Donation failed: ' + response.message);
             }
 
-            // Show success message
-            showThankYouMessage(formData.name);
-            donationForm.reset();
-
         } catch (error) {
-            console.error('Error:', error);
-            // Still show success message even if Telegram fails
-            showThankYouMessage(formData.name);
-            donationForm.reset();
+            console.error('Error submitting donation:', error);
+            alert('Something went wrong. Please try again later.');
         } finally {
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
@@ -250,7 +216,7 @@ function showThankYouMessage(name) {
 // Contact Form Handler
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const submitBtn = contactForm.querySelector('button[type="submit"]');
@@ -258,12 +224,29 @@ if (contactForm) {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
         submitBtn.disabled = true;
 
-        setTimeout(() => {
-            alert('Thank you for your message! We will get back to you soon.');
-            contactForm.reset();
+        const formData = {
+            name: document.getElementById('contactName').value,
+            email: document.getElementById('contactEmail').value,
+            phone: document.getElementById('contactPhone').value,
+            subject: document.getElementById('contactSubject').value,
+            message: document.getElementById('contactMessage').value
+        };
+
+        try {
+            const response = await api.submitContact(formData);
+            if (response.success) {
+                alert('Thank you for your message! We will get back to you soon.');
+                contactForm.reset();
+            } else {
+                alert('Failed to send message: ' + response.message);
+            }
+        } catch (err) {
+            console.error('Error sending message:', err);
+            alert('Something went wrong. Please try again later.');
+        } finally {
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
-        }, 1500);
+        }
     });
 }
 
@@ -273,24 +256,32 @@ if (contactForm) {
 
 const adminLoginForm = document.getElementById('adminLoginForm');
 if (adminLoginForm) {
-    adminLoginForm.addEventListener('submit', (e) => {
+    adminLoginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const username = document.getElementById('adminUsername').value;
         const password = document.getElementById('adminPassword').value;
         const errorMsg = document.getElementById('loginError');
+        const submitBtn = adminLoginForm.querySelector('button[type="submit"]');
 
-        // Simple authentication (in production, use proper backend authentication)
-        if (username === 'admin' && password === 'Hope@2026') {
-            localStorage.setItem('adminLoggedIn', 'true');
-            window.location.href = 'dashboard.html';
-        } else {
-            errorMsg.textContent = 'Invalid credentials. Please try again.';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await api.login(username, password);
+            if (response.success) {
+                window.location.href = 'dashboard.html';
+            } else {
+                errorMsg.textContent = response.message || 'Invalid credentials. Please try again.';
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 3000);
+            }
+        } catch (err) {
+            errorMsg.textContent = 'Server connection error. Please try again.';
             errorMsg.style.display = 'block';
-
-            setTimeout(() => {
-                errorMsg.style.display = 'none';
-            }, 3000);
+        } finally {
+            submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Sign In</span>';
+            submitBtn.disabled = false;
         }
     });
 }
@@ -301,10 +292,10 @@ if (adminLoginForm) {
 
 // Check admin authentication
 function checkAdminAuth() {
-    const isLoggedIn = localStorage.getItem('adminLoggedIn');
+    const token = localStorage.getItem('adminToken');
     const currentPage = window.location.pathname;
 
-    if (currentPage.includes('admin/') && !currentPage.includes('login.html') && !isLoggedIn) {
+    if (currentPage.includes('admin/') && !currentPage.includes('login.html') && !token) {
         window.location.href = 'login.html';
     }
 }
@@ -315,8 +306,7 @@ checkAdminAuth();
 const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('adminLoggedIn');
-        window.location.href = 'login.html';
+        api.logout();
     });
 }
 
