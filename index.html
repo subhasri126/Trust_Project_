@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hope Foundation - Transforming Lives Together</title>
+    <meta name="description"
+        content="Join us in making a difference. Hope Foundation brings education, food, and healthcare to communities in need.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-hands-helping"></i>
+                <span>Hope Foundation</span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="causes.html">Causes</a></li>
+                <li><a href="donate.html">Donate</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button class="donate-btn-nav" onclick="window.location.href='donate.html'">
+                <i class="fas fa-heart"></i> Donate Now
+            </button>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-image-container">
+            <img src="images/hero-image.jpg" alt="Children learning together" class="hero-image">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">Transforming Lives, One Step at a Time</h1>
+            <p class="hero-subtitle">Together, we can bring hope, education, and nourishment to those who need it most
+            </p>
+            <button class="cta-button" onclick="window.location.href='donate.html'">
+                <span>Donate Now</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <p>Scroll to explore</p>
+        </div>
+    </section>
+
+    <!-- Impact Statistics -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card" data-aos="fade-up">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number" data-target="15000">0</div>
+                    <p class="stat-label">Lives Impacted</p>
+                </div>
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-number" data-target="250">0</div>
+                    <p class="stat-label">Events Organized</p>
+                </div>
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="stat-number" data-target="500">0</div>
+                    <p class="stat-label">Active Volunteers</p>
+                </div>
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon">
+                        <i class="fas fa-globe-asia"></i>
+                    </div>
+                    <div class="stat-number" data-target="45">0</div>
+                    <p class="stat-label">Communities Served</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="intro-section">
+        <div class="container">
+            <div class="intro-content">
+                <div class="intro-text" data-aos="fade-right">
+                    <span class="section-tag">Who We Are</span>
+                    <h2 class="section-title">Building a Better Tomorrow</h2>
+                    <p class="intro-description">
+                        Hope Foundation is a non-profit organization dedicated to empowering underprivileged communities
+                        through education, nutrition, and healthcare. Since our inception, we've been committed to
+                        creating lasting change and breaking the cycle of poverty.
+                    </p>
+                    <p class="intro-description">
+                        Our team of passionate volunteers and partners work tirelessly to ensure that every child has
+                        access to quality education, every family has nutritious meals, and every individual receives
+                        the healthcare they deserve.
+                    </p>
+                    <button class="secondary-btn" onclick="window.location.href='about.html'">
+                        Learn More About Us
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="intro-image" data-aos="fade-left">
+                    <img src="images/about-preview.jpg" alt="Our mission in action">
+                    <div class="image-decoration"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Causes -->
+    <section class="featured-causes">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="section-tag">Our Impact</span>
+                <h2 class="section-title">Causes We Champion</h2>
+                <p class="section-subtitle">Every contribution makes a real difference in someone's life</p>
+            </div>
+            <div class="causes-grid">
+                <div class="cause-card" data-aos="fade-up">
+                    <div class="cause-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Education for All</h3>
+                    <p>Providing quality education, books, and learning materials to underprivileged children, ensuring
+                        they have the tools to build a brighter future.</p>
+                    <a href="causes.html" class="cause-link">
+                        Explore More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="cause-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="cause-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Food Security</h3>
+                    <p>Fighting hunger by distributing nutritious meals and essential food supplies to families
+                        struggling to make ends meet.</p>
+                    <a href="causes.html" class="cause-link">
+                        Explore More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="cause-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="cause-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3>Healthcare Access</h3>
+                    <p>Organizing medical camps and providing essential healthcare services to communities with limited
+                        access to medical facilities.</p>
+                    <a href="causes.html" class="cause-link">
+                        Explore More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content" data-aos="zoom-in">
+                <h2>Your Support Can Change Lives</h2>
+                <p>Join us in our mission to create a world where everyone has access to education, food, and healthcare
+                </p>
+                <div class="cta-buttons">
+                    <button class="cta-button" onclick="window.location.href='donate.html'">
+                        <span>Make a Donation</span>
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="secondary-btn white" onclick="window.location.href='contact.html'">
+                        Get Involved
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-hands-helping"></i>
+                        <span>Hope Foundation</span>
+                    </div>
+                    <p class="footer-description">
+                        Transforming lives through education, nutrition, and healthcare. Together, we build a better
+                        tomorrow.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="causes.html">Our Causes</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Get Involved</h4>
+                    <ul class="footer-links">
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="contact.html">Volunteer</a></li>
+                        <li><a href="contact.html">Partner With Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Hope Street, City, State</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@hopefoundation.org</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 <span id="secretAccess">Hope Foundation</span>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/admin-cms.js"></script>
+    <script src="js/dynamic-content.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

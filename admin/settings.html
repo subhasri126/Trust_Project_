@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Hope Foundation</title>
+    <link rel="stylesheet" href="../css/style.css?v=2.0">
+    <link rel="stylesheet" href="../css/admin.css?v=2.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Hope Foundation</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="home-editor.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home Page Editor</span>
+                </a>
+                <a href="causes-manager.html" class="nav-item">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Causes Manager</span>
+                </a>
+                <a href="gallery-manage.html" class="nav-item">
+                    <i class="fas fa-images"></i>
+                    <span>Gallery Management</span>
+                </a>
+                <a href="posts-manager.html" class="nav-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Posts & Updates</span>
+                </a>
+                <a href="donations-view.html" class="nav-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Donations</span>
+                </a>
+                <a href="settings.html" class="nav-item active">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="../index.html" class="nav-item" target="_blank">
+                    <i class="fas fa-globe"></i>
+                    <span>View Website</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Site Settings</h1>
+                <p>Configure your website settings and integrations</p>
+            </header>
+
+            <div class="admin-content">
+                <!-- General Settings -->
+                <div class="editor-section">
+                    <h2><i class="fas fa-globe"></i> General Settings</h2>
+                    <form id="generalSettingsForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="siteName">Site Name</label>
+                                <input type="text" id="siteName" required placeholder="Hope Foundation">
+                            </div>
+                            <div class="form-group">
+                                <label for="tagline">Tagline</label>
+                                <input type="text" id="tagline" required placeholder="Transforming Lives Together">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Save General Settings
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="editor-section">
+                    <h2><i class="fas fa-address-book"></i> Contact Information</h2>
+                    <form id="contactSettingsForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="contactEmail">Email Address</label>
+                                <input type="email" id="contactEmail" required placeholder="info@hopefoundation.org">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contactPhone">Phone Number</label>
+                                <input type="tel" id="contactPhone" required placeholder="+1 (555) 123-4567">
+                            </div>
+                            <div class="form-group">
+                                <label for="contactAddress">Address</label>
+                                <input type="text" id="contactAddress" required
+                                    placeholder="123 Hope Street, City, State">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Save Contact Information
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Telegram Integration -->
+                <div class="editor-section">
+                    <h2><i class="fab fa-telegram"></i> Telegram Integration</h2>
+                    <p class="section-description">Configure Telegram Bot to receive donation notifications</p>
+                    <form id="telegramSettingsForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="telegramBotToken">Bot Token</label>
+                                <input type="text" id="telegramBotToken" placeholder="Enter your Telegram Bot Token">
+                                <small>Get your bot token from <a href="https://t.me/BotFather"
+                                        target="_blank">@BotFather</a></small>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="telegramChatId">Chat ID</label>
+                                <input type="text" id="telegramChatId" placeholder="Enter your Telegram Chat ID">
+                                <small>Get your chat ID from <a href="https://t.me/userinfobot"
+                                        target="_blank">@userinfobot</a></small>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Save Telegram Settings
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Data Management -->
+                <div class="editor-section">
+                    <h2><i class="fas fa-database"></i> Data Management</h2>
+                    <p class="section-description">Manage your website data</p>
+                    <div class="data-actions">
+                        <button onclick="exportAllData()" class="btn-secondary">
+                            <i class="fas fa-download"></i> Export All Data
+                        </button>
+                        <button onclick="clearAllData()" class="btn-danger">
+                            <i class="fas fa-trash-alt"></i> Clear All Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/admin-cms.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        // Load settings on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const settings = getSiteSettings();
+
+            document.getElementById('siteName').value = settings.siteName;
+            document.getElementById('tagline').value = settings.tagline;
+            document.getElementById('contactEmail').value = settings.contactEmail;
+            document.getElementById('contactPhone').value = settings.contactPhone;
+            document.getElementById('contactAddress').value = settings.contactAddress;
+            document.getElementById('telegramBotToken').value = settings.telegramBotToken || '';
+            document.getElementById('telegramChatId').value = settings.telegramChatId || '';
+        });
+
+        // General settings form
+        document.getElementById('generalSettingsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const settings = getSiteSettings();
+
+            settings.siteName = document.getElementById('siteName').value;
+            settings.tagline = document.getElementById('tagline').value;
+
+            updateSiteSettings(settings);
+            showNotification('General settings saved successfully!');
+        });
+
+        // Contact settings form
+        document.getElementById('contactSettingsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const settings = getSiteSettings();
+
+            settings.contactEmail = document.getElementById('contactEmail').value;
+            settings.contactPhone = document.getElementById('contactPhone').value;
+            settings.contactAddress = document.getElementById('contactAddress').value;
+
+            updateSiteSettings(settings);
+            showNotification('Contact information saved successfully!');
+        });
+
+        // Telegram settings form
+        document.getElementById('telegramSettingsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const settings = getSiteSettings();
+
+            settings.telegramBotToken = document.getElementById('telegramBotToken').value;
+            settings.telegramChatId = document.getElementById('telegramChatId').value;
+
+            updateSiteSettings(settings);
+            showNotification('Telegram settings saved successfully!');
+        });
+
+        // Export all data
+        function exportAllData() {
+            const data = {
+                homePageContent: getHomePageContent(),
+                causesData: getCauses(),
+                galleryImages: JSON.parse(localStorage.getItem('galleryImages')) || [],
+                postsData: getPosts(),
+                donationsLog: getDonations(),
+                siteSettings: getSiteSettings()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `hope-foundation-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            showNotification('Data exported successfully!');
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (confirm('⚠️ WARNING: This will delete ALL website data including causes, gallery, posts, and donations. This action CANNOT be undone. Are you absolutely sure?')) {
+                if (confirm('This is your last chance. Click OK to permanently delete all data.')) {
+                    localStorage.clear();
+                    showNotification('All data has been cleared!', 'error');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

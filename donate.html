@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate - Hope Foundation</title>
+    <meta name="description"
+        content="Make a difference today. Your donation helps provide education, food, and healthcare to those in need.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-hands-helping"></i>
+                <span>Hope Foundation</span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="causes.html">Causes</a></li>
+                <li><a href="donate.html" class="active">Donate</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button class="donate-btn-nav" onclick="window.location.href='donate.html'">
+                <i class="fas fa-heart"></i> Donate Now
+            </button>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 data-aos="fade-up">Make a Difference</h1>
+            <p data-aos="fade-up" data-aos-delay="100">Your generosity can transform lives</p>
+        </div>
+    </section>
+
+    <!-- Donate Section -->
+    <section class="donate-section">
+        <div class="donate-container">
+            <div class="donate-form-card" data-aos="fade-up">
+                <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+                    <span class="section-tag">Donation Form</span>
+                    <h2 class="section-title">Share Your Intent to Donate</h2>
+                    <p class="section-subtitle">Fill out the form below and we'll contact you with donation details</p>
+                </div>
+
+                <form id="donationForm">
+                    <div class="form-group">
+                        <label for="donorName">Full Name *</label>
+                        <input type="text" id="donorName" name="donorName" required placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="donorEmail">Email Address *</label>
+                        <input type="email" id="donorEmail" name="donorEmail" required
+                            placeholder="your.email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="donorPhone">Phone Number</label>
+                        <input type="tel" id="donorPhone" name="donorPhone" placeholder="+1 (555) 123-4567">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Donation Amount (₹) *</label>
+                        <div class="amount-options">
+                            <button type="button" class="amount-btn" data-amount="500">₹500</button>
+                            <button type="button" class="amount-btn" data-amount="1000">₹1,000</button>
+                            <button type="button" class="amount-btn" data-amount="2500">₹2,500</button>
+                            <button type="button" class="amount-btn" data-amount="5000">₹5,000</button>
+                            <button type="button" class="amount-btn" data-amount="10000">₹10,000</button>
+                            <button type="button" class="amount-btn" data-amount="custom">Custom</button>
+                        </div>
+                        <input type="number" id="donationAmount" name="donationAmount" required
+                            placeholder="Enter amount" min="1" style="margin-top: 15px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="donationCause">Choose a Cause (Optional)</label>
+                        <select id="donationCause" name="donationCause">
+                            <option value="general">General Fund</option>
+                            <option value="education">Education for All</option>
+                            <option value="food">Food Security</option>
+                            <option value="healthcare">Healthcare Access</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="donationMessage">Message (Optional)</label>
+                        <textarea id="donationMessage" name="donationMessage"
+                            placeholder="Share why you want to support our cause..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-heart"></i> Submit Donation Intent
+                    </button>
+
+                    <p style="text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-gray);">
+                        <i class="fas fa-lock"></i> We'll contact you shortly with secure payment details
+                    </p>
+                </form>
+            </div>
+
+            <!-- Impact Info -->
+            <div class="impact-info" style="margin-top: 60px;" data-aos="fade-up">
+                <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+                    <h2 class="section-title">Your Impact</h2>
+                    <p class="section-subtitle">See how your donation makes a difference</p>
+                </div>
+                <div class="impact-grid">
+                    <div class="impact-item">
+                        <div class="impact-number">₹500</div>
+                        <p>Provides school supplies for 5 children</p>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-number">₹1,000</div>
+                        <p>Feeds a family for one month</p>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-number">₹2,500</div>
+                        <p>Sponsors a child's education for 3 months</p>
+                    </div>
+                    <div class="impact-item">
+                        <div class="impact-number">₹5,000</div>
+                        <p>Organizes a medical camp for 50 people</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-hands-helping"></i>
+                        <span>Hope Foundation</span>
+                    </div>
+                    <p class="footer-description">
+                        Transforming lives through education, nutrition, and healthcare. Together, we build a better
+                        tomorrow.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="causes.html">Our Causes</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Get Involved</h4>
+                    <ul class="footer-links">
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="contact.html">Volunteer</a></li>
+                        <li><a href="contact.html">Partner With Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Hope Street, City, State</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@hopefoundation.org</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 <span id="secretAccess">Hope Foundation</span>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Amount button selection
+        const amountBtns = document.querySelectorAll('.amount-btn');
+        const amountInput = document.getElementById('donationAmount');
+
+        amountBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                amountBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const amount = btn.getAttribute('data-amount');
+                if (amount !== 'custom') {
+                    amountInput.value = amount;
+                } else {
+                    amountInput.value = '';
+                    amountInput.focus();
+                }
+            });
+        });
+
+        // Clear active state when typing custom amount
+        amountInput.addEventListener('input', () => {
+            amountBtns.forEach(b => b.classList.remove('active'));
+        });
+    </script>
+</body>
+
+</html>

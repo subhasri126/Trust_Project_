@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donations View - Hope Foundation</title>
+    <link rel="stylesheet" href="../css/style.css?v=2.0">
+    <link rel="stylesheet" href="../css/admin.css?v=2.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Hope Foundation</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="home-editor.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home Page Editor</span>
+                </a>
+                <a href="causes-manager.html" class="nav-item">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Causes Manager</span>
+                </a>
+                <a href="gallery-manage.html" class="nav-item">
+                    <i class="fas fa-images"></i>
+                    <span>Gallery Management</span>
+                </a>
+                <a href="posts-manager.html" class="nav-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Posts & Updates</span>
+                </a>
+                <a href="donations-view.html" class="nav-item active">
+                    <i class="fas fa-heart"></i>
+                    <span>Donations</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="../index.html" class="nav-item" target="_blank">
+                    <i class="fas fa-globe"></i>
+                    <span>View Website</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Donation Requests</h1>
+                <p>View and manage donation submissions</p>
+            </header>
+
+            <div class="admin-content">
+                <!-- Statistics -->
+                <div class="donations-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--primary-gradient);">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalDonations">0</h3>
+                            <p>Total Donations</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--success-gradient);">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalAmount">₹0</h3>
+                            <p>Total Amount</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--accent-gradient);">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="todayDonations">0</h3>
+                            <p>Today's Donations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donations List -->
+                <div class="editor-section">
+                    <div class="section-header-with-button">
+                        <h2><i class="fas fa-list"></i> Recent Donations</h2>
+                        <button onclick="exportDonations()" class="btn-secondary">
+                            <i class="fas fa-download"></i> Export CSV
+                        </button>
+                    </div>
+                    <div id="donationsList" class="donations-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/admin-cms.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        // Load donations
+        function loadDonations() {
+            const donations = getDonations();
+            const donationsList = document.getElementById('donationsList');
+
+            // Update statistics
+            document.getElementById('totalDonations').textContent = donations.length;
+
+            const totalAmount = donations.reduce((sum, d) => sum + parseFloat(d.amount || 0), 0);
+            document.getElementById('totalAmount').textContent = '₹' + totalAmount.toLocaleString();
+
+            const today = new Date().toDateString();
+            const todayCount = donations.filter(d => new Date(d.timestamp).toDateString() === today).length;
+            document.getElementById('todayDonations').textContent = todayCount;
+
+            // Display donations
+            if (donations.length === 0) {
+                donationsList.innerHTML = '<p class="empty-state">No donations received yet.</p>';
+                return;
+            }
+
+            donationsList.innerHTML = donations.map(donation => `
+                <div class="donation-item">
+                    <div class="donation-header">
+                        <div class="donation-info">
+                            <h3>${donation.name}</h3>
+                            <div class="donation-meta">
+                                <span class="donation-amount">₹${parseFloat(donation.amount).toLocaleString()}</span>
+                                <span class="donation-date"><i class="fas fa-clock"></i> ${formatDate(donation.timestamp)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    ${donation.message ? `<p class="donation-message"><i class="fas fa-quote-left"></i> ${donation.message}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Export donations to CSV
+        function exportDonations() {
+            const donations = getDonations();
+
+            if (donations.length === 0) {
+                alert('No donations to export');
+                return;
+            }
+
+            let csv = 'Name,Amount,Message,Date\n';
+            donations.forEach(d => {
+                csv += `"${d.name}","${d.amount}","${d.message || ''}","${formatDate(d.timestamp)}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `donations_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            showNotification('Donations exported successfully!');
+        }
+
+        // Load donations on page load
+        window.addEventListener('DOMContentLoaded', loadDonations);
+    </script>
+</body>
+
+</html>

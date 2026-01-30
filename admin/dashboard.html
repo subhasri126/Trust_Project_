@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hope Foundation</title>
+    <link rel="stylesheet" href="../css/style.css?v=2.0">
+    <link rel="stylesheet" href="../css/admin.css?v=2.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Hope Foundation</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="home-editor.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home Page Editor</span>
+                </a>
+                <a href="causes-manager.html" class="nav-item">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Causes Manager</span>
+                </a>
+                <a href="gallery-manage.html" class="nav-item">
+                    <i class="fas fa-images"></i>
+                    <span>Gallery Management</span>
+                </a>
+                <a href="posts-manager.html" class="nav-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Posts & Updates</span>
+                </a>
+                <a href="donations-view.html" class="nav-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Donations</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="../index.html" class="nav-item" target="_blank">
+                    <i class="fas fa-globe"></i>
+                    <span>View Website</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Dashboard Overview</h1>
+                <p>Welcome back, Admin</p>
+            </header>
+
+            <div class="admin-content">
+                <!-- Stats Cards -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="causesCount">0</h3>
+                            <p>Total Causes</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="donationCount">0</h3>
+                            <p>Donations</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="galleryCount">0</h3>
+                            <p>Gallery Images</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="messageCount">0</h3>
+                            <p>Posts & Updates</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-grid">
+                        <button class="action-card" onclick="window.location.href='home-editor.html'">
+                            <i class="fas fa-home"></i>
+                            <h3>Edit Homepage</h3>
+                            <p>Customize content</p>
+                        </button>
+                        <button class="action-card" onclick="window.location.href='causes-manager.html'">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            <h3>Manage Causes</h3>
+                            <p>Add or edit causes</p>
+                        </button>
+                        <button class="action-card" onclick="window.location.href='gallery-manage.html'">
+                            <i class="fas fa-upload"></i>
+                            <h3>Upload Images</h3>
+                            <p>Add to gallery</p>
+                        </button>
+                        <button class="action-card" onclick="window.location.href='posts-manager.html'">
+                            <i class="fas fa-bullhorn"></i>
+                            <h3>Create Post</h3>
+                            <p>Share updates</p>
+                        </button>
+                        <button class="action-card" onclick="window.location.href='donations-view.html'">
+                            <i class="fas fa-heart"></i>
+                            <h3>View Donations</h3>
+                            <p>Check requests</p>
+                        </button>
+                        <button class="action-card" onclick="window.open('../index.html', '_blank')">
+                            <i class="fas fa-eye"></i>
+                            <h3>View Website</h3>
+                            <p>Preview site</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- System Information -->
+                <div class="recent-activity">
+                    <h2>System Information</h2>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4>Admin Access</h4>
+                                <p>You are logged in as administrator</p>
+                                <span class="activity-time">Active session</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4>Data Storage</h4>
+                                <p>Using browser localStorage for content management</p>
+                                <span class="activity-time">Operational</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4>System Status</h4>
+                                <p>All systems operational and secure</p>
+                                <span class="activity-time">Healthy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/admin-cms.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        // Update dashboard stats
+        window.addEventListener('DOMContentLoaded', () => {
+            const galleryImages = JSON.parse(localStorage.getItem('galleryImages')) || [];
+            const donations = JSON.parse(localStorage.getItem('donationsLog')) || [];
+            const posts = JSON.parse(localStorage.getItem('postsData')) || [];
+            const causes = JSON.parse(localStorage.getItem('causesData')) || [];
+
+            document.getElementById('causesCount').textContent = causes.length;
+            document.getElementById('galleryCount').textContent = galleryImages.length;
+            document.getElementById('donationCount').textContent = donations.length;
+            document.getElementById('messageCount').textContent = posts.length;
+
+            // Update causes count in a new stat card if needed
+            console.log(`Dashboard loaded: ${causes.length} causes, ${galleryImages.length} images, ${donations.length} donations, ${posts.length} posts`);
+        });
+    </script>
+</body>
+
+</html>

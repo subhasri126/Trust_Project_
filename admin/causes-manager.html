@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Causes Manager - Hope Foundation</title>
+    <link rel="stylesheet" href="../css/style.css?v=2.0">
+    <link rel="stylesheet" href="../css/admin.css?v=2.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Hope Foundation</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="home-editor.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home Page Editor</span>
+                </a>
+                <a href="causes-manager.html" class="nav-item active">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Causes Manager</span>
+                </a>
+                <a href="gallery-manage.html" class="nav-item">
+                    <i class="fas fa-images"></i>
+                    <span>Gallery Management</span>
+                </a>
+                <a href="posts-manager.html" class="nav-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Posts & Updates</span>
+                </a>
+                <a href="donations-view.html" class="nav-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Donations</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="../index.html" class="nav-item" target="_blank">
+                    <i class="fas fa-globe"></i>
+                    <span>View Website</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Causes Manager</h1>
+                <p>Add, edit, or remove causes displayed on your website</p>
+            </header>
+
+            <div class="admin-content">
+                <!-- Add New Cause -->
+                <div class="editor-section">
+                    <div class="section-header-with-button">
+                        <h2><i class="fas fa-plus-circle"></i> Add New Cause</h2>
+                        <button id="toggleFormBtn" class="btn-secondary">
+                            <i class="fas fa-chevron-down"></i> Show Form
+                        </button>
+                    </div>
+
+                    <form id="causeForm" class="admin-form" style="display: none;">
+                        <input type="hidden" id="causeId">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="causeTitle">Cause Title *</label>
+                                <input type="text" id="causeTitle" required placeholder="e.g., Education for All">
+                            </div>
+                            <div class="form-group">
+                                <label for="causeIcon">Icon Class *</label>
+                                <input type="text" id="causeIcon" required placeholder="fas fa-graduation-cap">
+                                <small>Font Awesome icon class</small>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="causeShortDesc">Short Description *</label>
+                                <textarea id="causeShortDesc" rows="2" required
+                                    placeholder="Brief description for cards"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="causeFullDesc">Full Description *</label>
+                                <textarea id="causeFullDesc" rows="3" required
+                                    placeholder="Detailed description for cause page"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="causeImage">Image URL</label>
+                                <input type="text" id="causeImage" placeholder="images/cause-image.jpg">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="causeImageFile">Or Upload Image</label>
+                                <input type="file" id="causeImageFile" accept="image/*">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="causeFeatures">Features (one per line)</label>
+                                <textarea id="causeFeatures" rows="5"
+                                    placeholder="Free tutoring programs&#10;Books and materials&#10;Scholarship opportunities"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> <span id="formBtnText">Add Cause</span>
+                            </button>
+                            <button type="button" id="cancelBtn" class="btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Existing Causes -->
+                <div class="editor-section">
+                    <h2><i class="fas fa-list"></i> Existing Causes</h2>
+                    <div id="causesList" class="causes-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/admin-cms.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        let editingCauseId = null;
+
+        // Toggle form visibility
+        document.getElementById('toggleFormBtn').addEventListener('click', () => {
+            const form = document.getElementById('causeForm');
+            const btn = document.getElementById('toggleFormBtn');
+            const icon = btn.querySelector('i');
+
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-chevron-up"></i> Hide Form';
+            } else {
+                form.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-chevron-down"></i> Show Form';
+                resetForm();
+            }
+        });
+
+        // Load and display causes
+        function loadCauses() {
+            const causes = getCauses();
+            const causesList = document.getElementById('causesList');
+
+            if (causes.length === 0) {
+                causesList.innerHTML = '<p class="empty-state">No causes added yet. Create your first cause above!</p>';
+                return;
+            }
+
+            causesList.innerHTML = causes.map(cause => `
+                <div class="cause-item ${!cause.active ? 'inactive' : ''}">
+                    <div class="cause-item-header">
+                        <div class="cause-item-icon">
+                            <i class="${cause.icon}"></i>
+                        </div>
+                        <div class="cause-item-info">
+                            <h3>${cause.title}</h3>
+                            <p>${cause.shortDescription}</p>
+                            <span class="cause-status ${cause.active ? 'active' : 'inactive'}">
+                                ${cause.active ? 'Active' : 'Inactive'}
+                            </span>
+                        </div>
+                        <div class="cause-item-actions">
+                            <button onclick="editCause(${cause.id})" class="btn-icon" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="toggleCauseActive(${cause.id})" class="btn-icon" title="Toggle Status">
+                                <i class="fas fa-${cause.active ? 'eye-slash' : 'eye'}"></i>
+                            </button>
+                            <button onclick="removeCause(${cause.id})" class="btn-icon btn-danger" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    ${cause.image ? `<img src="${cause.image}" alt="${cause.title}" class="cause-item-image">` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Form submission
+        document.getElementById('causeForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const causeData = {
+                title: document.getElementById('causeTitle').value,
+                icon: document.getElementById('causeIcon').value,
+                shortDescription: document.getElementById('causeShortDesc').value,
+                fullDescription: document.getElementById('causeFullDesc').value,
+                image: document.getElementById('causeImage').value,
+                features: document.getElementById('causeFeatures').value.split('\n').filter(f => f.trim())
+            };
+
+            const fileInput = document.getElementById('causeImageFile');
+            if (fileInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    causeData.image = e.target.result;
+                    saveCauseData(causeData);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                saveCauseData(causeData);
+            }
+        });
+
+        function saveCauseData(causeData) {
+            if (editingCauseId) {
+                updateCause(editingCauseId, causeData);
+                showNotification('Cause updated successfully!');
+                editingCauseId = null;
+            } else {
+                addCause(causeData);
+                showNotification('Cause added successfully!');
+            }
+
+            resetForm();
+            loadCauses();
+            document.getElementById('causeForm').style.display = 'none';
+            document.getElementById('toggleFormBtn').innerHTML = '<i class="fas fa-chevron-down"></i> Show Form';
+        }
+
+        // Edit cause
+        function editCause(causeId) {
+            const causes = getCauses();
+            const cause = causes.find(c => c.id === causeId);
+
+            if (cause) {
+                editingCauseId = causeId;
+                document.getElementById('causeTitle').value = cause.title;
+                document.getElementById('causeIcon').value = cause.icon;
+                document.getElementById('causeShortDesc').value = cause.shortDescription;
+                document.getElementById('causeFullDesc').value = cause.fullDescription;
+                document.getElementById('causeImage').value = cause.image || '';
+                document.getElementById('causeFeatures').value = cause.features.join('\n');
+
+                document.getElementById('formBtnText').textContent = 'Update Cause';
+                document.getElementById('causeForm').style.display = 'block';
+                document.getElementById('toggleFormBtn').innerHTML = '<i class="fas fa-chevron-up"></i> Hide Form';
+
+                // Scroll to form
+                document.getElementById('causeForm').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Toggle cause active status
+        function toggleCauseActive(causeId) {
+            toggleCauseStatus(causeId);
+            loadCauses();
+            showNotification('Cause status updated!');
+        }
+
+        // Remove cause
+        function removeCause(causeId) {
+            if (confirm('Are you sure you want to delete this cause? This action cannot be undone.')) {
+                deleteCause(causeId);
+                loadCauses();
+                showNotification('Cause deleted successfully!');
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            editingCauseId = null;
+            document.getElementById('causeForm').reset();
+            document.getElementById('formBtnText').textContent = 'Add Cause';
+        }
+
+        // Cancel button
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            resetForm();
+            document.getElementById('causeForm').style.display = 'none';
+            document.getElementById('toggleFormBtn').innerHTML = '<i class="fas fa-chevron-down"></i> Show Form';
+        });
+
+        // Load causes on page load
+        window.addEventListener('DOMContentLoaded', loadCauses);
+    </script>
+</body>
+
+</html>

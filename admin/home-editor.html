@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page Editor - Hope Foundation</title>
+    <link rel="stylesheet" href="../css/style.css?v=2.0">
+    <link rel="stylesheet" href="../css/admin.css?v=2.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Hope Foundation</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="home-editor.html" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Home Page Editor</span>
+                </a>
+                <a href="causes-manager.html" class="nav-item">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Causes Manager</span>
+                </a>
+                <a href="gallery-manage.html" class="nav-item">
+                    <i class="fas fa-images"></i>
+                    <span>Gallery Management</span>
+                </a>
+                <a href="posts-manager.html" class="nav-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Posts & Updates</span>
+                </a>
+                <a href="donations-view.html" class="nav-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Donations</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="../index.html" class="nav-item" target="_blank">
+                    <i class="fas fa-globe"></i>
+                    <span>View Website</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Home Page Editor</h1>
+                <p>Customize the content displayed on your homepage</p>
+            </header>
+
+            <div class="admin-content">
+                <!-- Hero Section Editor -->
+                <div class="editor-section">
+                    <h2><i class="fas fa-image"></i> Hero Section</h2>
+                    <form id="heroForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="heroTitle">Hero Title</label>
+                                <input type="text" id="heroTitle" required placeholder="Enter hero title">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="heroTagline">Hero Tagline</label>
+                                <textarea id="heroTagline" rows="3" required
+                                    placeholder="Enter hero tagline"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="heroImage">Hero Image URL</label>
+                                <input type="text" id="heroImage" required placeholder="images/hero-image.jpg">
+                                <small>Enter the image path or upload a new image</small>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="heroImageFile">Or Upload New Image</label>
+                                <input type="file" id="heroImageFile" accept="image/*">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Save Hero Section
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Statistics Editor -->
+                <div class="editor-section">
+                    <h2><i class="fas fa-chart-line"></i> Impact Statistics</h2>
+                    <form id="statsForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="livesImpacted">Lives Impacted</label>
+                                <input type="number" id="livesImpacted" required min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="eventsOrganized">Events Organized</label>
+                                <input type="number" id="eventsOrganized" required min="0">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="activeVolunteers">Active Volunteers</label>
+                                <input type="number" id="activeVolunteers" required min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="communitiesServed">Communities Served</label>
+                                <input type="number" id="communitiesServed" required min="0">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Save Statistics
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Introduction Section Editor -->
+                <div class="editor-section">
+                    <h2><i class="fas fa-align-left"></i> Introduction Section</h2>
+                    <form id="introForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="introTitle">Section Title</label>
+                                <input type="text" id="introTitle" required placeholder="Building a Better Tomorrow">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="introText">Introduction Text</label>
+                                <textarea id="introText" rows="5" required
+                                    placeholder="Enter introduction text"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Save Introduction
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Preview Button -->
+                <div class="editor-section">
+                    <button class="btn-secondary" onclick="window.open('../index.html', '_blank')">
+                        <i class="fas fa-eye"></i> Preview Homepage
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/admin-cms.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+        // Load current home page content
+        window.addEventListener('DOMContentLoaded', () => {
+            const content = getHomePageContent();
+
+            // Populate hero section
+            document.getElementById('heroTitle').value = content.heroTitle;
+            document.getElementById('heroTagline').value = content.heroTagline;
+            document.getElementById('heroImage').value = content.heroImage;
+
+            // Populate statistics
+            document.getElementById('livesImpacted').value = content.stats.livesImpacted;
+            document.getElementById('eventsOrganized').value = content.stats.eventsOrganized;
+            document.getElementById('activeVolunteers').value = content.stats.activeVolunteers;
+            document.getElementById('communitiesServed').value = content.stats.communitiesServed;
+
+            // Populate introduction
+            document.getElementById('introTitle').value = content.introTitle;
+            document.getElementById('introText').value = content.introText;
+        });
+
+        // Hero form submission
+        document.getElementById('heroForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const content = getHomePageContent();
+
+            const fileInput = document.getElementById('heroImageFile');
+            if (fileInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    content.heroImage = e.target.result;
+                    saveHeroContent(content);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                saveHeroContent(content);
+            }
+        });
+
+        function saveHeroContent(content) {
+            content.heroTitle = document.getElementById('heroTitle').value;
+            content.heroTagline = document.getElementById('heroTagline').value;
+            content.heroImage = document.getElementById('heroImage').value;
+
+            updateHomePageContent(content);
+            showNotification('Hero section updated successfully!');
+        }
+
+        // Statistics form submission
+        document.getElementById('statsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const content = getHomePageContent();
+
+            content.stats.livesImpacted = parseInt(document.getElementById('livesImpacted').value);
+            content.stats.eventsOrganized = parseInt(document.getElementById('eventsOrganized').value);
+            content.stats.activeVolunteers = parseInt(document.getElementById('activeVolunteers').value);
+            content.stats.communitiesServed = parseInt(document.getElementById('communitiesServed').value);
+
+            updateHomePageContent(content);
+            showNotification('Statistics updated successfully!');
+        });
+
+        // Introduction form submission
+        document.getElementById('introForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const content = getHomePageContent();
+
+            content.introTitle = document.getElementById('introTitle').value;
+            content.introText = document.getElementById('introText').value;
+
+            updateHomePageContent(content);
+            showNotification('Introduction section updated successfully!');
+        });
+    </script>
+</body>
+
+</html>
