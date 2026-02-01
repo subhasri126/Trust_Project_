@@ -8,7 +8,7 @@ const emailService = require('../services/email');
 class DonationsController {
     async submitDonation(req, res) {
         try {
-            let { donor_name, amount, email, phone, message, payment_method, transaction_id } = req.body;
+            let { donor_name, amount, email, phone, message, payment_method, transaction_id, cause } = req.body;
 
             // Default values for missing fields to prevent DB errors
             if (!transaction_id) {
@@ -18,18 +18,19 @@ class DonationsController {
                 payment_method = 'Online';
             }
 
-            // 1. Database Insert (The critical part)
+            // 1. Database Insert
             const result = await query(
-                `INSERT INTO donations (donor_name, amount, email, phone, message, payment_method, transaction_id) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?)`,
-                [donor_name, amount, email, phone, message, payment_method, transaction_id]
+                `INSERT INTO donations (donor_name, amount, cause, email, phone, message, payment_method, transaction_id) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [donor_name, amount, cause || 'General', email, phone, message, payment_method, transaction_id]
             );
 
             // Construct donation object for notifications
             const donationData = {
-                id: result.insertId || result.rows.insertId, // Handle mysql2 vs pg structure
+                id: result.insertId || result.rows?.insertId,
                 donor_name,
                 amount,
+                cause: cause || 'General',
                 email,
                 phone,
                 message,
@@ -69,36 +70,15 @@ class DonationsController {
 
     async getAllDonations(req, res) {
         try {
-            let { status, limit = 100, offset = 0 } = req.query;
-            limit = parseInt(limit);
-            offset = parseInt(offset);
-
-            let queryText = 'SELECT * FROM donations';
-            const params = [];
-
-            if (status) {
-                queryText += ' WHERE status = ?';
-                params.push(status);
-            }
-
-            queryText += ' ORDER BY donation_date DESC LIMIT ? OFFSET ?';
-            params.push(limit, offset);
-
-            const result = await query(queryText, params);
-
-            const countQuery = status
-                ? 'SELECT COUNT(*) as count FROM donations WHERE status = ?'
-                : 'SELECT COUNT(*) as count FROM donations';
-            const countParams = status ? [status] : [];
-            const countResult = await query(countQuery, countParams);
+            // Fetch all donations as requested (latest first)
+            const queryText = 'SELECT * FROM donations ORDER BY donation_date DESC';
+            const result = await query(queryText);
 
             res.json({
                 success: true,
                 data: {
                     donations: result.rows,
-                    total: countResult.rows[0].count,
-                    limit,
-                    offset
+                    total: result.rowCount
                 }
             });
         } catch (error) {
@@ -141,6 +121,7 @@ class DonationsController {
             const totalResult = await query('SELECT COUNT(*) as count, COALESCE(SUM(amount), 0) as total_amount FROM donations');
             const statusResult = await query('SELECT status, COUNT(*) as count, COALESCE(SUM(amount), 0) as total_amount FROM donations GROUP BY status');
             const recentResult = await query("SELECT COUNT(*) as count, COALESCE(SUM(amount), 0) as total_amount FROM donations WHERE donation_date >= NOW() - INTERVAL 30 DAY");
+            const todayResult = await query("SELECT COUNT(*) as count FROM donations WHERE DATE(donation_date) = CURDATE()");
 
             res.json({
                 success: true,
@@ -149,7 +130,8 @@ class DonationsController {
                     by_status: statusResult.rows.map(row => ({
                         status: row.status, count: row.count, amount: parseFloat(row.total_amount)
                     })),
-                    last_30_days: { count: recentResult.rows[0].count, amount: parseFloat(recentResult.rows[0].total_amount) }
+                    last_30_days: { count: recentResult.rows[0].count, amount: parseFloat(recentResult.rows[0].total_amount) },
+                    today: { count: todayResult.rows[0].count }
                 }
             });
         } catch (error) {

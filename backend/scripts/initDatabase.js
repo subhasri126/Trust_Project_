@@ -101,6 +101,7 @@ async function initializeDatabase() {
         id INT AUTO_INCREMENT PRIMARY KEY,
         donor_name VARCHAR(255) NOT NULL,
         amount DECIMAL(10, 2) NOT NULL,
+        cause VARCHAR(255),
         email VARCHAR(100),
         phone VARCHAR(20),
         message TEXT,

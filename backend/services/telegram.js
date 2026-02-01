@@ -48,11 +48,12 @@ class TelegramService {
      * Format donation message for Telegram
      */
     formatDonationMessage(donation) {
-        const { donor_name, amount, email, phone, message, donation_date } = donation;
+        const { donor_name, amount, cause, email, phone, message, donation_date } = donation;
 
         let text = '🎉 <b>NEW DONATION RECEIVED!</b>\n\n';
         text += `👤 <b>Donor:</b> ${donor_name}\n`;
-        text += `💰 <b>Amount:</b> $${parseFloat(amount).toFixed(2)}\n`;
+        text += `💰 <b>Amount:</b> ₹${parseFloat(amount).toLocaleString()}\n`;
+        text += `🎯 <b>Cause:</b> ${cause || 'General'}\n`;
 
         if (email) {
             text += `📧 <b>Email:</b> ${email}\n`;

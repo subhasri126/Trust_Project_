@@ -29,7 +29,8 @@ testConnection();
 const query = async (text, params) => {
     try {
         const [results] = await pool.execute(text, params);
-        return { rows: results, rowCount: results.length };
+        const rowCount = results.length !== undefined ? results.length : results.affectedRows;
+        return { rows: results, rowCount: rowCount };
     } catch (error) {
         console.error('Database query error:', error);
         throw error;
