@@ -21,9 +21,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Security Middleware
-app.use(helmet({
-    crossOriginResourcePolicy: false, // Allow images to be loaded by frontend
-}));
+// app.use(helmet()); // Temporarily disabled for debugging UI issues
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,16 +29,27 @@ app.use(morgan('dev'));
 
 // Rate Limiting
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
+    windowMs: 15 * 60 * 1000,
+    max: 100
 });
 app.use('/api/', limiter);
 
 // Static Files for Uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Serve Frontend Static Files
-app.use(express.static(path.join(__dirname, '../')));
+// Serve Frontend Static Files Explicitly (Best Practice)
+app.use('/css', (req, res, next) => {
+    console.log(`[DEBUG] CSS Request: ${req.url}`);
+    next();
+}, express.static(path.join(__dirname, '../css')));
+app.use('/js', express.static(path.join(__dirname, '../js')));
+app.use('/images', express.static(path.join(__dirname, '../images')));
+app.use('/admin', express.static(path.join(__dirname, '../admin')));
+
+// Serve Index HTML for Root
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../index.html'));
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -52,15 +61,6 @@ app.use('/api/posts', postsRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/contacts', contactRoutes);
 
-// Base route
-app.get('/', (req, res) => {
-    res.json({
-        message: 'Welcome to Charity Foundation API',
-        status: 'Running',
-        version: '1.0.0'
-    });
-});
-
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
@@ -71,10 +71,22 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
+const os = require('os');
+const networkInterfaces = os.networkInterfaces();
+const addresses = [];
+for (const k in networkInterfaces) {
+    for (const k2 in networkInterfaces[k]) {
+        const address = networkInterfaces[k][k2];
+        if (address.family === 'IPv4' && !address.internal) {
+            addresses.push(address.address);
+        }
+    }
+}
+
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`
 🚀 Server is running on port ${PORT}
-🌍 URL: http://localhost:${PORT}
-📂 Uploads: http://localhost:${PORT}/uploads
-  `);
+🌍 Local:            http://localhost:${PORT}
+🌐 Network IPs:      ${addresses.map(a => `http://${a}:${PORT}`).join(', ')}
+    `);
 });

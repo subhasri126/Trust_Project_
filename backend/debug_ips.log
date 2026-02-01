@@ -1,0 +1,11 @@
+--- Network Interfaces Debug ---
+Interface: Subhasri_vpn
+  Family: IPv4, Address: 172.26.0.107, Internal: false
+Interface: Wi-Fi
+  Family: IPv6, Address: 2409:40f4:2105:e48:18c0:9902:a2e:7223, Internal: false
+  Family: IPv6, Address: 2409:40f4:2105:e48:d988:4c43:e4c2:4cfd, Internal: false
+  Family: IPv6, Address: fe80::c518:a0dd:55f0:bdf7, Internal: false
+  Family: IPv4, Address: 10.169.126.65, Internal: false
+Interface: Loopback Pseudo-Interface 1
+  Family: IPv6, Address: ::1, Internal: true
+  Family: IPv4, Address: 127.0.0.1, Internal: true

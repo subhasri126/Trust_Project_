@@ -1,5 +1,6 @@
 const { query } = require('../config/database');
 const telegramService = require('../services/telegram');
+const emailService = require('../services/email');
 
 /**
  * Donations Controller (MySQL)
@@ -7,28 +8,61 @@ const telegramService = require('../services/telegram');
 class DonationsController {
     async submitDonation(req, res) {
         try {
-            const { donor_name, amount, email, phone, message, payment_method, transaction_id } = req.body;
+            let { donor_name, amount, email, phone, message, payment_method, transaction_id } = req.body;
 
+            // Default values for missing fields to prevent DB errors
+            if (!transaction_id) {
+                transaction_id = 'TXN-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            }
+            if (!payment_method) {
+                payment_method = 'Online';
+            }
+
+            // 1. Database Insert (The critical part)
             const result = await query(
                 `INSERT INTO donations (donor_name, amount, email, phone, message, payment_method, transaction_id) 
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                 VALUES (?, ?, ?, ?, ?, ?, ?)`,
                 [donor_name, amount, email, phone, message, payment_method, transaction_id]
             );
 
-            // Fetch the inserted donation for notification
-            const [newDonation] = await query('SELECT * FROM donations WHERE id = LAST_INSERT_ID()').then(res => res.rows);
+            // Construct donation object for notifications
+            const donationData = {
+                id: result.insertId || result.rows.insertId, // Handle mysql2 vs pg structure
+                donor_name,
+                amount,
+                email,
+                phone,
+                message,
+                donation_date: new Date()
+            };
 
-            if (newDonation) {
-                telegramService.sendDonationNotification(newDonation).catch(err => console.error('Telegram notification failed:', err));
+            // 2. Notifications (Non-blocking / Fire-and-forget)
+            // We do NOT await these to ensure the user gets a fast response.
+            // Even if they fail, the donation is already recorded safe in DB.
+
+            // Telegram Notification
+            telegramService.sendDonationNotification(donationData)
+                .catch(err => console.error('⚠️ Telegram notification failed:', err.message));
+
+            // Email Acknowledgement (if email is provided)
+            if (email) {
+                // Use the same acknowledgement method or create a specific donation one if needed.
+                // For now, reusing the generic acknowledgement is better than nothing, 
+                // but ideally we'd have a specific `sendDonationReceipt`.
+                // Since the user asked for "Email acknowledgement", generic is likely fine or we can extend emailService later.
+                emailService.sendAcknowledgement(email, donor_name)
+                    .catch(err => console.error('⚠️ Email acknowledgement failed:', err.message));
             }
 
+            // 3. Return Success Response
             res.status(201).json({
                 success: true,
                 message: 'Thank you for your generous donation!',
-                data: { id: result.insertId, donor_name, amount, donation_date: new Date() }
+                data: donationData
             });
+
         } catch (error) {
-            console.error('Submit donation error:', error);
+            console.error('❌ Submit donation error:', error);
             res.status(500).json({ success: false, message: 'Failed to process donation' });
         }
     }

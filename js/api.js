@@ -3,7 +3,7 @@
  * Handles all communications with the Express/SQL backend
  */
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = `${window.location.origin}/api`;
 
 const api = {
     // --- Auth ---

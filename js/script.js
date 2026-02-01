@@ -200,16 +200,24 @@ function showThankYouMessage(name) {
             <h2>Thank You, ${name}!</h2>
             <p>Your generosity will make a real difference in someone's life.</p>
             <p>We'll be in touch with you shortly with donation details.</p>
-            <button onclick="this.parentElement.parentElement.remove()" class="cta-button">
+            <button class="cta-button close-modal-btn">
                 Close
             </button>
         </div>
     `;
     document.body.appendChild(modal);
 
+    // Fix: Proper event listener for close button
+    const closeBtn = modal.querySelector('.close-modal-btn');
+    closeBtn.addEventListener('click', () => {
+        modal.style.opacity = '0';
+        setTimeout(() => modal.remove(), 300); // Wait for fade out
+    });
+
     setTimeout(() => {
-        modal.querySelector('.thank-you-content').style.transform = 'scale(1)';
-        modal.querySelector('.thank-you-content').style.opacity = '1';
+        const content = modal.querySelector('.thank-you-content');
+        content.style.transform = 'scale(1)';
+        content.style.opacity = '1';
     }, 10);
 }
 
@@ -421,3 +429,59 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
+
+// ==========================================
+// DONATE BUTTON HANDLER
+// ==========================================
+
+document.querySelectorAll('.donate-btn-nav, .cta-button').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        // Prevent default if it's an anchor tag, though these are buttons
+        if (e.target.tagName === 'A') e.preventDefault();
+
+        // If button specifically says "Donate Now" or "Make a Donation"
+        const text = btn.textContent.toLowerCase();
+        if (text.includes('donate') || text.includes('donation')) {
+            if (window.location.pathname.includes('donate.html')) {
+                const form = document.getElementById('donationForm');
+                if (form) {
+                    form.scrollIntoView({ behavior: 'smooth' });
+                }
+            } else {
+                window.location.href = 'donate.html';
+            }
+        }
+    });
+});
+
+
+// ==========================================
+// DONATION AMOUNT SELECTION
+// ==========================================
+
+const amountBtns = document.querySelectorAll('.amount-btn');
+const amountInput = document.getElementById('donationAmount');
+
+if (amountBtns.length > 0 && amountInput) {
+    amountBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all buttons
+            amountBtns.forEach(b => b.classList.remove('active'));
+            // Add active class to clicked button
+            btn.classList.add('active');
+
+            const amount = btn.getAttribute('data-amount');
+            if (amount !== 'custom') {
+                amountInput.value = amount;
+            } else {
+                amountInput.value = '';
+                amountInput.focus();
+            }
+        });
+    });
+
+    // Clear active state when typing custom amount
+    amountInput.addEventListener('input', () => {
+        amountBtns.forEach(b => b.classList.remove('active'));
+    });
+}
