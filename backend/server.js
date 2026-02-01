@@ -46,7 +46,15 @@ app.use('/js', express.static(path.join(__dirname, '../js')));
 app.use('/images', express.static(path.join(__dirname, '../images')));
 app.use('/admin', express.static(path.join(__dirname, '../admin')));
 
-// Serve Index HTML for Root
+// Serve HTML files from root
+const htmlPages = ['index.html', 'about.html', 'causes.html', 'contact.html', 'donate.html', 'gallery.html'];
+htmlPages.forEach(page => {
+    app.get(`/${page}`, (req, res) => {
+        res.sendFile(path.join(__dirname, '../', page));
+    });
+});
+
+// Root route
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../index.html'));
 });
